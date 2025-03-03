@@ -1,52 +1,33 @@
-# scripts/create_tables.py
-import sys  # Adicione essa linha no topo do seu script
+# setup_timescaledb.py
+import os
+from sqlalchemy import create_engine, text
+from app.core.database.db import Base  # Certifique-se de que seu Base contém o modelo SensorDataModel
 
-from sqlalchemy import create_engine, inspect, exc
-from app.core.database.db import Base, DATABASE_URL  # Importe Base e a URL
+# Obtenha a URL do banco a partir de uma variável de ambiente
+DATABASE_URL = os.getenv("DATABASE_URL")
 
+engine = create_engine(DATABASE_URL)
 
-def create_tables(engine):
-    """
-    Cria todas as tabelas definidas nos metadados da Base.
-    """
-    inspector = inspect(engine)
-    if inspector.get_table_names():
-        print("WARNING: Tables already exist.  They will NOT be recreated.")
-        return  # Sai da função se as tabelas já existirem
+def enable_timescaledb_extension(engine):
+    with engine.connect() as conn:
+        print("Habilitando a extensão timescaledb...")
+        conn.execute(text("CREATE EXTENSION IF NOT EXISTS timescaledb;"))
+        print("Extensão habilitada.")
 
-    print("Creating all tables...")
-    try:
-        if not inspector.get_table_names():  # Se não houver tabelas, cria
-            print("Creating all tables...")
-            Base.metadata.create_all(bind=engine)
-            print("Tables created successfully.")
-        else:
-            print("Tables already exist. Skipping creation.")
-        print("Tables created successfully.")
-    except exc.SQLAlchemyError as e:
-        print(f"ERROR: Could not create tables: {e}", file=sys.stderr)
-        exit(1)
-    except Exception as e:
-        print(f"An unexpected error occurred: {e}", file=sys.stderr)
-        exit(1)
+def create_hypertable(engine):
+    with engine.connect() as conn:
+        print("Convertendo a tabela sensor_data em hypertable...")
+        conn.execute(
+            text("SELECT create_hypertable('sensor_data', 'timestamp', if_not_exists => TRUE);")
+        )
+        print("Tabela convertida para hypertable.")
 
+def main():
+    print("Criando tabelas (se necessário)...")
+    Base.metadata.create_all(bind=engine)
+    
+    enable_timescaledb_extension(engine)
+    create_hypertable(engine)
 
 if __name__ == "__main__":
-    print(f"Using DATABASE_URL: {DATABASE_URL}")  # Imprime a URL
-
-    # Cria a engine do SQLAlchemy
-    try:
-        engine = create_engine(DATABASE_URL)
-        # Testa a conexão *imediatamente*
-        with engine.connect() as connection:
-            print("Database connection successful.")
-    except exc.SQLAlchemyError as e:
-        print(
-            f"ERROR: Could not connect to the database: {e}", file=sys.stderr)
-        exit(1)
-    except Exception as e:
-        print(f"An unexpected error occurred: {e}", file=sys.stderr)
-        exit(1)
-
-    # Chame a função para criar as tabelas
-    create_tables(engine)
+    main()

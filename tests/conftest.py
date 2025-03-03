@@ -14,6 +14,8 @@ from app.main import app
 
 TEST_SQLALCHEMY_DATABASE_URL: str = configs.TEST_DATABASE_URL
 
+print(TEST_SQLALCHEMY_DATABASE_URL)
+
 admin_engine = create_engine(
     f"postgresql://{configs.POSTGRES_USER}:{configs.POSTGRES_PASSWORD}@{configs.POSTGRES_SERVER}/postgres", isolation_level="AUTOCOMMIT")
 

@@ -1,5 +1,5 @@
 from app.core.database.db import Base
-from sqlalchemy import Column, Integer, String, Float, DateTime, ForeignKey
+from sqlalchemy import Column, Integer, String, Float, DateTime, ForeignKey, UniqueConstraint
 from sqlalchemy.orm import relationship
 
 
@@ -17,10 +17,10 @@ class ServerModel(Base):
 class SensorDataModel(Base):
     __tablename__ = "sensor_data"
 
-    id = Column(Integer, primary_key=True, index=True)
+    id = Column(Integer, primary_key=True, autoincrement= True)
     server_ulid = Column(String, ForeignKey(
-        "servers.ulid"), nullable=False)
-    timestamp = Column(DateTime, nullable=False)
+        "servers.ulid"), nullable=False, index=True)
+    timestamp = Column(DateTime, nullable=False, primary_key=True)
     temperature = Column(Float, nullable=True)
     humidity = Column(Float, nullable=True)
     voltage = Column(Float, nullable=True)
