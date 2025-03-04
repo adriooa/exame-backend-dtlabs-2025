@@ -9,11 +9,7 @@ from app.useCases.sensor_data_service import SensorDataService
 router = APIRouter()
 
 
-@router.post("/data",
-             response_model=SensorDataDTO,
-             status_code=status.HTTP_201_CREATED,
-             dependencies=[Depends(get_current_user)]
-             )
+@router.post("/data", response_model=SensorDataDTO, status_code=status.HTTP_201_CREATED)
 @inject
 def register_sensor_data(
     dto: RegisterSensorDataDTO,
@@ -34,7 +30,10 @@ def register_sensor_data(
         ) from e
 
 
-@router.get("/data", response_model=None, status_code=status.HTTP_200_OK)
+@router.get("/data", 
+            response_model=None,
+            status_code=status.HTTP_200_OK,
+            dependencies=[Depends(get_current_user)])
 @inject
 def get_sensor_data(
     query: SensorDataQueryDTO = Depends(),

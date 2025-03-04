@@ -1,8 +1,12 @@
 from datetime import datetime, timedelta, timezone
 from fastapi import status
 from app.core.database.models import SensorDataModel, ServerModel
+from app.main import app
+from app.core.dependencies import get_current_user
+
 
 def test_get_sensor_data_without_aggregation(client, db):
+    app.dependency_overrides[get_current_user] = lambda: "username"
     server_ulid = "server123"
     server = ServerModel(ulid=server_ulid, name="Test Server", status="online")
     db.add(server)
@@ -41,8 +45,10 @@ def test_get_sensor_data_without_aggregation(client, db):
     assert len(data) == 2
     assert data[0]["temperature"] == 25.3
     assert data[1]["temperature"] == 24.9
+    app.dependency_overrides.clear()
 
 def test_get_sensor_data_with_aggregation_minute(client, db):
+    app.dependency_overrides[get_current_user] = lambda: "username"
     server_ulid = "server_agg_minute"
     server = ServerModel(ulid=server_ulid, name="Server Minute", status="online")
     db.add(server)
@@ -82,8 +88,10 @@ def test_get_sensor_data_with_aggregation_minute(client, db):
     assert isinstance(data, list)
     assert len(data) == 1
     assert data[0]["temperature"] == 26.0
+    app.dependency_overrides.clear()
 
 def test_get_sensor_data_with_aggregation_hour(client, db):
+    app.dependency_overrides[get_current_user] = lambda: "username"
     server_ulid = "server_agg_hour"
     server = ServerModel(ulid=server_ulid, name="Server Hour", status="online")
     db.add(server)
@@ -124,8 +132,10 @@ def test_get_sensor_data_with_aggregation_hour(client, db):
     assert isinstance(data, list)
     assert len(data) == 1
     assert data[0]["humidity"] == 61.0
+    app.dependency_overrides.clear()
 
 def test_get_sensor_data_no_results(client, db):
+    app.dependency_overrides[get_current_user] = lambda: "username"
     server_ulid = "server_no_data"
 
     params = {
@@ -138,8 +148,10 @@ def test_get_sensor_data_no_results(client, db):
     data = response.json()
     assert isinstance(data, list)
     assert len(data) == 0
+    app.dependency_overrides.clear()
 
 def test_get_sensor_data_multiple_servers_without_aggregation(client, db):
+    app.dependency_overrides[get_current_user] = lambda: "username"
     server1_ulid = "server1"
     server2_ulid = "server2"
     
@@ -179,8 +191,10 @@ def test_get_sensor_data_multiple_servers_without_aggregation(client, db):
     assert len(data) == 2
     assert data[0]["temperature"] == 23.0
     assert data[1]["temperature"] == 24.0
+    app.dependency_overrides.clear()
 
 def test_get_sensor_data_multiple_servers_with_aggregation(client, db):
+    app.dependency_overrides[get_current_user] = lambda: "username"
     server1_ulid = "serverA"
     server2_ulid = "serverB"
     
@@ -223,9 +237,11 @@ def test_get_sensor_data_multiple_servers_with_aggregation(client, db):
     assert isinstance(data, list)
     assert len(data) == 1
     assert data[0]["temperature"] == 21.0
+    app.dependency_overrides.clear()
 
 
 def test_get_sensor_data_without_aggregation_sensor_type(client, db):
+    app.dependency_overrides[get_current_user] = lambda: "username"
     server_ulid = "server123"
     server = ServerModel(ulid=server_ulid, name="Test Server", status="online")
     db.add(server)
@@ -270,12 +286,11 @@ def test_get_sensor_data_without_aggregation_sensor_type(client, db):
         assert "voltage" not in record
         assert "current" not in record
         assert "id" not in record
+    app.dependency_overrides.clear()
 
-from datetime import datetime, timezone, timedelta
-from fastapi import status
-from app.core.database.models import SensorDataModel, ServerModel
 
 def test_get_sensor_data_with_aggregation_sensor_type(client, db):
+    app.dependency_overrides[get_current_user] = lambda: "username"
     server_ulid = "server_agg"
     server = ServerModel(ulid=server_ulid, name="Server Aggregation", status="online")
     db.add(server)
@@ -326,8 +341,10 @@ def test_get_sensor_data_with_aggregation_sensor_type(client, db):
     assert "voltage" not in record
     assert "current" not in record
     assert "id" not in record
+    app.dependency_overrides.clear()
 
 def test_get_sensor_data_invalid_aggregation(client, db):
+    app.dependency_overrides[get_current_user] = lambda: "username"
     server_ulid = "server_invalid_agg"
     server = ServerModel(ulid=server_ulid, name="Invalid Agg Server", status="online")
     db.add(server)
@@ -342,8 +359,10 @@ def test_get_sensor_data_invalid_aggregation(client, db):
     response = client.get("/data", params=params)
 
     assert response.status_code == status.HTTP_422_UNPROCESSABLE_ENTITY
+    app.dependency_overrides.clear()
 
 def test_get_sensor_data_invalid_sensor_type(client, db):
+    app.dependency_overrides[get_current_user] = lambda: "username"
     server_ulid = "server_invalid_sensor"
     server = ServerModel(ulid=server_ulid, name="Invalid Sensor Server", status="online")
     db.add(server)
@@ -358,8 +377,10 @@ def test_get_sensor_data_invalid_sensor_type(client, db):
     response = client.get("/data", params=params)
 
     assert response.status_code == status.HTTP_422_UNPROCESSABLE_ENTITY
+    app.dependency_overrides.clear()
 
 def test_get_sensor_data_invalid_time_range(client, db):
+    app.dependency_overrides[get_current_user] = lambda: "username"
     server_ulid = "server_invalid_time"
     server = ServerModel(ulid=server_ulid, name="Invalid Time Server", status="online")
     db.add(server)
@@ -374,8 +395,10 @@ def test_get_sensor_data_invalid_time_range(client, db):
 
     assert response.status_code == status.HTTP_400_BAD_REQUEST
     assert response.json()["detail"] == "start_time cannot be greater than end_time"
+    app.dependency_overrides.clear()
 
 def test_get_sensor_data_no_results(client, db):
+    app.dependency_overrides[get_current_user] = lambda: "username"
     server_ulid = "server_no_data"
     server = ServerModel(ulid=server_ulid, name="No Data Server", status="online")
     db.add(server)
@@ -390,8 +413,10 @@ def test_get_sensor_data_no_results(client, db):
 
     assert response.status_code == status.HTTP_200_OK
     assert response.json() == []
+    app.dependency_overrides.clear()
 
 def test_get_sensor_data_invalid_datetime_format(client, db):
+    app.dependency_overrides[get_current_user] = lambda: "username"
     server_ulid = "server_invalid_datetime"
     server = ServerModel(ulid=server_ulid, name="Invalid Datetime Server", status="online")
     db.add(server)
@@ -405,3 +430,4 @@ def test_get_sensor_data_invalid_datetime_format(client, db):
     response = client.get("/data", params=params)
 
     assert response.status_code == status.HTTP_422_UNPROCESSABLE_ENTITY
+    app.dependency_overrides.clear()

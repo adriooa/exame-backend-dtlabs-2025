@@ -39,7 +39,6 @@ def test_register_sensor_data_success(client, db, auth_token):
 
 
 def test_register_sensor_data_fail_server_not_found(client):
-    app.dependency_overrides[get_current_user] = lambda: "username"
     server_ulid = "01JMG0J6BH9JV08PKJD5GSRM84"
 
     payload = {
@@ -54,7 +53,6 @@ def test_register_sensor_data_fail_server_not_found(client):
     assert response.status_code in [
         status.HTTP_404_NOT_FOUND, status.HTTP_400_BAD_REQUEST]
     
-    app.dependency_overrides.clear()
     
 
 
