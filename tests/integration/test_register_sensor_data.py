@@ -1,6 +1,6 @@
 from fastapi import status
 from app.main import app  
-from app.core.dependencies import get_current_user  # Import the get_current_user function
+from app.core.dependencies import get_current_user
 from app.domain.dtos.sensor_data_dto import SensorDataDTO
 from app.core.database.models import SensorDataModel, ServerModel
 from datetime import datetime, timezone

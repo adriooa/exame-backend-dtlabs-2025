@@ -1,3 +1,4 @@
+from enum import Enum
 from typing import Optional
 from pydantic import BaseModel, Field, model_validator, validator, field_validator
 from datetime import datetime
@@ -67,3 +68,23 @@ class SensorDataDTO(SensorDataFields):
                 "current": 1.2,
             }
         }
+
+
+class SensorTypeEnum(str, Enum):
+    temperature = "temperature"
+    humidity = "humidity"
+    voltage = "voltage"
+    current = "current"
+
+class AggregationEnum(str, Enum):
+    minute = "minute"
+    hour = "hour"
+    day = "day"
+
+class SensorDataQueryDTO(BaseModel):
+    server_ulid: Optional[str] = None
+    start_time: Optional[datetime] = None
+    end_time: Optional[datetime] = None
+    sensor_type: Optional[SensorTypeEnum] = None
+    aggregation: Optional[AggregationEnum] = None 
+        
