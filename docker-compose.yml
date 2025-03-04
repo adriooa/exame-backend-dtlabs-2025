@@ -15,14 +15,14 @@ services:
     ports:
       - "8080:8080"
 
-  # app:
-  #   build: .
-  #   depends_on:
-  #     - db
-  #   environment:
-  #     - DATABASE_URL=postgresql://your_user:your_password@db:5432/your_db
-  #   command: >
-  #     sh -c "python setup_timescaledb.py &&
-  #            uvicorn app.main:app --host 0.0.0.0 --port 8000"
-  #   ports:
-  #     - "8000:8000"
+  app:
+    build: .
+    depends_on:
+      - db
+    environment:
+      - DATABASE_URL=postgresql://myuser:mypassword@localhost:5432/mydb
+    command: >
+      sh -c "python -m scripts.setup_timescaledb &&
+             uvicorn app.main:app --host 0.0.0.0 --port 8000"
+    ports:
+      - "8000:8000"

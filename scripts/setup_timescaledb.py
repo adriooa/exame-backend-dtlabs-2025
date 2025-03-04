@@ -1,33 +1,31 @@
-# scripts/setup_timescaledb.py
-import psycopg2
-from app.core.config import configs
+# setup_timescaledb.py
+import os
+from sqlalchemy import create_engine, text
+from app.core.database.db import Base  # Certifique-se de que o Base inclui seus models
 
-def setup_timescaledb():
-    """Configura o TimescaleDB (cria a extensão)."""
-    try:
-        conn = psycopg2.connect(
-            host="localhost",
-            database=configs.POSTGRES_DB,
-            user=configs.POSTGRES_USER,
-            password=configs.POSTGRES_PASSWORD,
-            port="5432" #Usar a porta para o caso de estar rodando local
-        )
-        conn.autocommit = True  # Importante para CREATE EXTENSION
-        cursor = conn.cursor()
+# Pega a URL do banco a partir de variável de ambiente
+DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://your_user:your_password@db:5432/your_db")
 
-        # Cria a extensão TimescaleDB
-        cursor.execute("CREATE EXTENSION IF NOT EXISTS timescaledb;")
-        print("TimescaleDB extension created/enabled.")
+engine = create_engine(DATABASE_URL)
 
-        cursor.close()
-        conn.close()
+def enable_timescaledb_extension(engine):
+    with engine.connect() as conn:
+        print("Habilitando a extensão timescaledb...")
+        conn.execute(text("CREATE EXTENSION IF NOT EXISTS timescaledb;"))
+        print("Extensão habilitada.")
 
-    except psycopg2.OperationalError as e:
-        print(f"Error connecting to PostgreSQL: {e}")
-        exit(1)
-    except psycopg2.Error as e:
-        print(f"Error creating TimescaleDB extension: {e}")
-        exit(1)
+def create_hypertable(engine):
+    with engine.connect() as conn:
+        print("Convertendo a tabela sensor_data em hypertable...")
+        conn.execute(text("SELECT create_hypertable('sensor_data', 'timestamp', if_not_exists => TRUE);"))
+        print("Tabela convertida para hypertable.")
+
+def main():
+    print("Criando tabelas (se necessário)...")
+    Base.metadata.create_all(bind=engine)
+    
+    enable_timescaledb_extension(engine)
+    create_hypertable(engine)
 
 if __name__ == "__main__":
-    setup_timescaledb()
+    main()
