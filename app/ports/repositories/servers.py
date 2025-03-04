@@ -1,5 +1,4 @@
 from abc import ABC, abstractmethod
-from app.domain.entities.Server import Server
 
 
 class ServersRepositoryInterface(ABC):

@@ -17,6 +17,7 @@ class ServerModel(Base):
 class SensorDataModel(Base):
     __tablename__ = "sensor_data"
 
+    # TODO: verificar primary key
     id = Column(Integer, primary_key=True, autoincrement= True)
     server_ulid = Column(String, ForeignKey(
         "servers.ulid"), nullable=False, index=True)
@@ -27,3 +28,11 @@ class SensorDataModel(Base):
     current = Column(Float, nullable=True)
 
     server = relationship("ServerModel", back_populates="sensor_data")
+
+
+class UserModel(Base):
+    __tablename__ = "users"
+
+    id = Column(Integer, primary_key=True, index=True)
+    username = Column(String, unique=True, index=True, nullable=False)
+    hashed_password = Column(String, nullable=False)

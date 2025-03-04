@@ -1,13 +1,18 @@
 from dependency_injector.wiring import Provide, inject
-from fastapi import APIRouter, Depends, HTTPException, Response, status
+from fastapi import APIRouter, Depends, HTTPException, status
 from app.core.container import Container
+from app.core.dependencies import get_current_user
 from app.domain.dtos.sensor_data_dto import RegisterSensorDataDTO, SensorDataDTO
 from app.useCases.sensor_data_service import SensorDataService
 
 router = APIRouter()
 
 
-@router.post("/data", response_model=SensorDataDTO, status_code=status.HTTP_201_CREATED)
+@router.post("/data",
+             response_model=SensorDataDTO,
+             status_code=status.HTTP_201_CREATED,
+             dependencies=[Depends(get_current_user)]
+             )
 @inject
 def register_sensor_data(
     dto: RegisterSensorDataDTO,

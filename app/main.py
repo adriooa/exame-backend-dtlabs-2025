@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
-from app.api.routes import sensor_data_controller
+from app.api.routes import auth_controller, sensor_data_controller
 from app.core.config import configs
 from app.core.container import Container
 from app.core.database.db import Base, engine
@@ -10,6 +10,8 @@ Base.metadata.create_all(bind=engine)
 
 def create_app() -> FastAPI:
     container = Container()
+    
+    container.wire(modules=[auth_controller, sensor_data_controller])
 
     app = FastAPI(
         title=configs.PROJECT_NAME,
@@ -32,8 +34,10 @@ def create_app() -> FastAPI:
         return "Service is working"
 
     app.include_router(sensor_data_controller.router)
+    app.include_router(auth_controller.router)
 
     app.container = container
+    
     return app
 
 

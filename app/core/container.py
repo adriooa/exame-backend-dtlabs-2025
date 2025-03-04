@@ -1,8 +1,10 @@
 from app.adapters.repositories.servers import PostgresServersRepository
 from dependency_injector import containers, providers
+from app.adapters.repositories.users import PostgresUsersRepository
 from app.core.database.db import engine
 from sqlalchemy.orm import sessionmaker
 from app.adapters.repositories.sensor_data import PostgresSensorDataRepository
+from app.useCases.auth_service import AuthService
 from app.useCases.sensor_data_service import SensorDataService
 
 
@@ -20,14 +22,25 @@ class Container(containers.DeclarativeContainer):
         db_session=db_session
     )
 
+    user_repository = providers.Factory(
+        PostgresUsersRepository,
+        db_session=db_session
+    )
+
     sensor_data_service = providers.Factory(
         SensorDataService,
         sensor_data_repository=sensor_data_repository,
         servers_repository=servers_repository
     )
 
+    auth_service = providers.Factory(
+        AuthService,
+        user_repository=user_repository
+    )
+
     wiring_config = containers.WiringConfiguration(
         modules=[
             "app.api.routes.sensor_data_controller",
+            "app.api.routes.auth_controller",
         ]
     )

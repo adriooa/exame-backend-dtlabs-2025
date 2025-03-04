@@ -84,3 +84,17 @@ def client(db):
     with TestClient(app) as c:
         yield c
     app.dependency_overrides.clear() 
+
+
+@pytest.fixture()
+def auth_token(client):
+    user_data = {"username": "testuser", "password": "testpassword"}
+    response = client.post("/auth/register", json=user_data)
+    assert response.status_code == 201 or response.status_code == 400 
+
+    response = client.post("/auth/login", json=user_data)
+    assert response.status_code == 200
+    token = response.json().get("access_token")
+    assert token is not None
+
+    return token
