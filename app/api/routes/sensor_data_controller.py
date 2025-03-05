@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from app.core.container import Container
 from app.core.dependencies import get_current_user
 from app.domain.dtos.sensor_data_dto import RegisterSensorDataDTO, SensorDataDTO, SensorDataQueryDTO
-from app.domain.dtos.sensor_health_dto import ServerHealthListDTO
+from app.domain.dtos.server_health_dto import ServerHealthListDTO
 from app.useCases.sensor_data_service import SensorDataService
 
 router = APIRouter()

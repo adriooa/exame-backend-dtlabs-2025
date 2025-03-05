@@ -1,5 +1,5 @@
 from datetime import datetime, timezone, timedelta
-from app.domain.dtos.sensor_health_dto import CreateServerDTO, ServerHealthDTO, ServerHealthListDTO
+from app.domain.dtos.server_health_dto import CreateServerDTO, ServerHealthDTO, ServerHealthListDTO
 from app.ports.repositories.servers import ServersRepositoryInterface
 
 

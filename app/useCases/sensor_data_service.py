@@ -1,6 +1,6 @@
 from typing import List
 from fastapi import HTTPException, status
-from app.domain.dtos.sensor_health_dto import ServerHealthDTO, ServerHealthListDTO
+from app.domain.dtos.server_health_dto import ServerHealthDTO, ServerHealthListDTO
 from app.domain.entities.SensorData import SensorData
 from app.domain.dtos.sensor_data_dto import RegisterSensorDataDTO, SensorDataDTO, SensorDataQueryDTO
 from app.ports.repositories.sensor_data_repository import SensorDataRepositoryInterface

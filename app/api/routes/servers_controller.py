@@ -2,7 +2,7 @@ from dependency_injector.wiring import Provide, inject
 from fastapi import APIRouter, Depends, HTTPException, status
 from app.core.container import Container
 from app.core.dependencies import get_current_user
-from app.domain.dtos.sensor_health_dto import CreateServerDTO, ServerHealthDTO, ServerHealthListDTO
+from app.domain.dtos.server_health_dto import CreateServerDTO, ServerHealthDTO, ServerHealthListDTO
 from app.useCases.server_service import ServerService
 
 
