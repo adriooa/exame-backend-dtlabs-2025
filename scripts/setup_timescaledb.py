@@ -17,7 +17,7 @@ def enable_timescaledb_extension(engine):
 def create_hypertable(engine):
     with engine.connect() as conn:
         print("Convertendo a tabela sensor_data em hypertable...")
-        conn.execute(text("SELECT create_hypertable('sensor_data', 'timestamp', if_not_exists => TRUE);"))
+        conn.execute(text("SELECT create_hypertable('sensor_data', 'timestamp', if_not_exists => TRUE, migrate_data => true);"))
         print("Tabela convertida para hypertable.")
 
 def main():

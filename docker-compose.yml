@@ -20,9 +20,9 @@ services:
     depends_on:
       - db
     environment:
-      - DATABASE_URL=postgresql://myuser:mypassword@localhost:5432/mydb
+      - DATABASE_URL=postgresql://myuser:mypassword@db:5432/mydb
     command: >
       sh -c "python -m scripts.setup_timescaledb &&
              uvicorn app.main:app --host 0.0.0.0 --port 8000"
     ports:
-      - "8000:8000"
+      - "8001:8000"

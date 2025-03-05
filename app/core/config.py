@@ -9,7 +9,7 @@ class Configs(BaseSettings):
     PROJECT_NAME: str = "IoT Backend"
 
 
-    POSTGRES_SERVER: str = os.getenv("POSTGRES_SERVER", "localhost")
+    POSTGRES_SERVER: str = os.getenv("POSTGRES_SERVER", "db")
     POSTGRES_USER: str = os.getenv("POSTGRES_USER", "myuser")
     POSTGRES_PASSWORD: str = os.getenv("POSTGRES_PASSWORD", "mypassword")
     POSTGRES_DB: str = os.getenv("POSTGRES_DB", "mydb")

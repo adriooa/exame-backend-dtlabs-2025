@@ -2,10 +2,14 @@
 
 dependency-injector==4.46.0
 fastapi==0.115.8
+passlib==1.7.4
 pydantic==2.10.6
 pydantic-settings==2.8.1
+PyJWT==2.9.0
 pytest==8.3.4
 python-dotenv==1.0.1
+pytz==2025.1
 SQLAlchemy==2.0.38
 starlette==0.44.0
 ulid-py==1.1.0
+psycopg2-binary
