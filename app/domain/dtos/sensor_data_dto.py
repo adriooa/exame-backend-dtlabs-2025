@@ -52,8 +52,6 @@ class RegisterSensorDataDTO(SensorDataFields):
 
 
 class SensorDataDTO(SensorDataFields):
-    id: int = Field(..., description="Identificador único")
-
     class Config:
         orm_mode = True
         from_attributes = True

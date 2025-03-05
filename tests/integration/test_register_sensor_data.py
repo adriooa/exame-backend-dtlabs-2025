@@ -10,7 +10,7 @@ def test_register_sensor_data_success(client, db, auth_token):
     headers = {"Authorization": f"Bearer {auth_token}"}
 
     server_ulid = "01JMG0J6BH9JV08PKJD5GSRM84"
-    server = ServerModel(ulid=server_ulid, name="Test Server", status="online")
+    server = ServerModel(ulid=server_ulid, name="Test Server", last_update=datetime.now(timezone.utc))
     db.add(server)
     db.commit()
 
@@ -52,12 +52,9 @@ def test_register_sensor_data_fail_server_not_found(client):
 
     assert response.status_code in [
         status.HTTP_404_NOT_FOUND, status.HTTP_400_BAD_REQUEST]
-    
-    
 
 
 def test_register_sensor_data_fail_missing_fields(client):
-    app.dependency_overrides[get_current_user] = lambda: "username"
     payload = {
         "server_ulid": "01JMG0J6BH9JV08PKJD5GSRM84",
         # "timestamp" ausente
@@ -68,11 +65,9 @@ def test_register_sensor_data_fail_missing_fields(client):
     response = client.post("/data", json=payload)
     assert response.status_code == status.HTTP_422_UNPROCESSABLE_ENTITY
     
-    app.dependency_overrides.clear()
 
 
 def test_register_sensor_data_fail_invalid_timestamp(client):
-    app.dependency_overrides[get_current_user] = lambda: "username"
     payload = {
         "server_ulid": "01JMG0J6BH9JV08PKJD5GSRM84",
         "timestamp": "data-inválida",
@@ -83,11 +78,8 @@ def test_register_sensor_data_fail_invalid_timestamp(client):
     response = client.post("/data", json=payload)
     assert response.status_code == status.HTTP_422_UNPROCESSABLE_ENTITY
 
-    app.dependency_overrides.clear()
-
 
 def test_register_sensor_data_fail_invalid_temperature(client):
-    app.dependency_overrides[get_current_user] = lambda: "username"
     payload = {
         "server_ulid": "01JMG0J6BH9JV08PKJD5GSRM84",
         "timestamp": "2024-02-19T12:34:56Z",
@@ -98,13 +90,10 @@ def test_register_sensor_data_fail_invalid_temperature(client):
     response = client.post("/data", json=payload)
     assert response.status_code == status.HTTP_422_UNPROCESSABLE_ENTITY
     
-    app.dependency_overrides.clear()
-
 
 def test_register_sensor_data_idempotence(client, db):
-    app.dependency_overrides[get_current_user] = lambda: "username"
     server_ulid = "01JMG0J6BH9JV08PKJD5GSRM84"
-    server = ServerModel(ulid=server_ulid, name="Test Server", status="online")
+    server = ServerModel(ulid=server_ulid, name="Test Server", last_update=datetime.now(timezone.utc))
     db.add(server)
     db.commit()
 
@@ -122,4 +111,3 @@ def test_register_sensor_data_idempotence(client, db):
     assert response2.status_code in [
         status.HTTP_201_CREATED, status.HTTP_409_CONFLICT]
     
-    app.dependency_overrides.clear()

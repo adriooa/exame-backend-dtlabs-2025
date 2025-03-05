@@ -8,7 +8,7 @@ from app.core.dependencies import get_current_user
 def test_get_sensor_data_without_aggregation(client, db):
     app.dependency_overrides[get_current_user] = lambda: "username"
     server_ulid = "server123"
-    server = ServerModel(ulid=server_ulid, name="Test Server", status="online")
+    server = ServerModel(ulid=server_ulid, name="Test Server")
     db.add(server)
     db.commit()
 
@@ -50,7 +50,7 @@ def test_get_sensor_data_without_aggregation(client, db):
 def test_get_sensor_data_with_aggregation_minute(client, db):
     app.dependency_overrides[get_current_user] = lambda: "username"
     server_ulid = "server_agg_minute"
-    server = ServerModel(ulid=server_ulid, name="Server Minute", status="online")
+    server = ServerModel(ulid=server_ulid, name="Server Minute")
     db.add(server)
     db.commit()
 
@@ -93,7 +93,7 @@ def test_get_sensor_data_with_aggregation_minute(client, db):
 def test_get_sensor_data_with_aggregation_hour(client, db):
     app.dependency_overrides[get_current_user] = lambda: "username"
     server_ulid = "server_agg_hour"
-    server = ServerModel(ulid=server_ulid, name="Server Hour", status="online")
+    server = ServerModel(ulid=server_ulid, name="Server Hour")
     db.add(server)
     db.commit()
 
@@ -155,8 +155,8 @@ def test_get_sensor_data_multiple_servers_without_aggregation(client, db):
     server1_ulid = "server1"
     server2_ulid = "server2"
     
-    server1 = ServerModel(ulid=server1_ulid, name="Server 1", status="online")
-    server2 = ServerModel(ulid=server2_ulid, name="Server 2", status="online")
+    server1 = ServerModel(ulid=server1_ulid, name="Server 1")
+    server2 = ServerModel(ulid=server2_ulid, name="Server 2")
     db.add(server1)
     db.add(server2)
     db.commit()
@@ -198,8 +198,8 @@ def test_get_sensor_data_multiple_servers_with_aggregation(client, db):
     server1_ulid = "serverA"
     server2_ulid = "serverB"
     
-    server1 = ServerModel(ulid=server1_ulid, name="Server A", status="online")
-    server2 = ServerModel(ulid=server2_ulid, name="Server B", status="online")
+    server1 = ServerModel(ulid=server1_ulid, name="Server A")
+    server2 = ServerModel(ulid=server2_ulid, name="Server B")
     db.add(server1)
     db.add(server2)
     db.commit()
@@ -243,7 +243,7 @@ def test_get_sensor_data_multiple_servers_with_aggregation(client, db):
 def test_get_sensor_data_without_aggregation_sensor_type(client, db):
     app.dependency_overrides[get_current_user] = lambda: "username"
     server_ulid = "server123"
-    server = ServerModel(ulid=server_ulid, name="Test Server", status="online")
+    server = ServerModel(ulid=server_ulid, name="Test Server")
     db.add(server)
     db.commit()
 
@@ -292,7 +292,7 @@ def test_get_sensor_data_without_aggregation_sensor_type(client, db):
 def test_get_sensor_data_with_aggregation_sensor_type(client, db):
     app.dependency_overrides[get_current_user] = lambda: "username"
     server_ulid = "server_agg"
-    server = ServerModel(ulid=server_ulid, name="Server Aggregation", status="online")
+    server = ServerModel(ulid=server_ulid, name="Server Aggregation")
     db.add(server)
     db.commit()
 
@@ -346,7 +346,7 @@ def test_get_sensor_data_with_aggregation_sensor_type(client, db):
 def test_get_sensor_data_invalid_aggregation(client, db):
     app.dependency_overrides[get_current_user] = lambda: "username"
     server_ulid = "server_invalid_agg"
-    server = ServerModel(ulid=server_ulid, name="Invalid Agg Server", status="online")
+    server = ServerModel(ulid=server_ulid, name="Invalid Agg Server")
     db.add(server)
     db.commit()
 
@@ -364,7 +364,7 @@ def test_get_sensor_data_invalid_aggregation(client, db):
 def test_get_sensor_data_invalid_sensor_type(client, db):
     app.dependency_overrides[get_current_user] = lambda: "username"
     server_ulid = "server_invalid_sensor"
-    server = ServerModel(ulid=server_ulid, name="Invalid Sensor Server", status="online")
+    server = ServerModel(ulid=server_ulid, name="Invalid Sensor Server")
     db.add(server)
     db.commit()
 
@@ -382,7 +382,7 @@ def test_get_sensor_data_invalid_sensor_type(client, db):
 def test_get_sensor_data_invalid_time_range(client, db):
     app.dependency_overrides[get_current_user] = lambda: "username"
     server_ulid = "server_invalid_time"
-    server = ServerModel(ulid=server_ulid, name="Invalid Time Server", status="online")
+    server = ServerModel(ulid=server_ulid, name="Invalid Time Server")
     db.add(server)
     db.commit()
 
@@ -400,7 +400,7 @@ def test_get_sensor_data_invalid_time_range(client, db):
 def test_get_sensor_data_no_results(client, db):
     app.dependency_overrides[get_current_user] = lambda: "username"
     server_ulid = "server_no_data"
-    server = ServerModel(ulid=server_ulid, name="No Data Server", status="online")
+    server = ServerModel(ulid=server_ulid, name="No Data Server")
     db.add(server)
     db.commit()
 
@@ -418,7 +418,7 @@ def test_get_sensor_data_no_results(client, db):
 def test_get_sensor_data_invalid_datetime_format(client, db):
     app.dependency_overrides[get_current_user] = lambda: "username"
     server_ulid = "server_invalid_datetime"
-    server = ServerModel(ulid=server_ulid, name="Invalid Datetime Server", status="online")
+    server = ServerModel(ulid=server_ulid, name="Invalid Datetime Server")
     db.add(server)
     db.commit()
 

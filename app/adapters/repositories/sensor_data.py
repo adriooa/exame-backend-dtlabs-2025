@@ -36,7 +36,6 @@ class PostgresSensorDataRepository(SensorDataRepositoryInterface):
         )
     
     def _apply_filters(self, query, server_ulid: Optional[str], start_time: Optional[str], end_time: Optional[str]):
-        """Aplica filtros comuns à query."""
         if server_ulid:
             query = query.filter(SensorDataModel.server_ulid == server_ulid)
         if start_time:
