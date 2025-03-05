@@ -24,6 +24,8 @@ iot-backend/
 │   ├── core/
 │   │   ├── container.py      # Configuração do container de DI
 │   │   ├── config.py         # Leitura de variáveis de ambiente e configurações
+│   │   ├── dependencies.py   # Funcionalidades adicionais (autenticação) - como se fosse um utils.py
+│   │   ├── security.py
 │   │   └── database/
 │   │       ├── db.py         # Engine, SessionLocal e Base
 │   │       └── models.py     # Models: SensorDataModel, ServerModel, etc.
@@ -31,25 +33,36 @@ iot-backend/
 │   │   └── repositories/    # Repositories implementation
 │   │       ├── sensor_data.py 
 │   │       └── servers.py
+│   │       └── users.py
 │   ├── api/
 │   │   └── routes/          # Controllers
+│   │       └── auth_controller.py
 │   │       └── sensor_data_controller.py
-│   └── useCases/
+│   │       └── servers_controller.py
+│   └── useCases/            # Services
+│       └── auth_service.py
 │       └── sensor_data_service.py
+│       └── server_service.py
 │   ├── ports/
 │   │   └── repositories/    # Repositories interface
 │   │       └── sensor_data_repository.py
 │   │       └── servers.py
+│   │       └── users.py
 │   ├── domain/
 │   │   └── dto/
 │   │       └── sensor_data_dto.py
+│   │       └── server_health_dto.py
+│   │       └── token_dto.py
+│   │       └── user_dto.py
 │   │   └── entities/
 │   │       └── SensorData.py
 │   │       └── Server.py
+│   │       └── User.py
 ├── tests/
 │   ├── conftest.py
 │   │   └── integration/
 │   │       └── test_sensor_data_controller.py
+│   │       └── test_....py
 ├── scripts/
 │   ├── setup_timescaledb.py   # Script para habilitar a extensão e criar a hypertable
 ├── Dockerfile
@@ -60,12 +73,14 @@ iot-backend/
 
 ## Configuração
 
-As variáveis de ambiente necessárias estão definidas no docker-compose.yml. Caso necessário, ajuste os seguintes valores:
+Crie um arquivo `.env` (ou configure as variáveis no ambiente) com as seguintes chaves:
 ```
-    POSTGRES_USER
-    POSTGRES_PASSWORD
-    POSTGRES_DB
-    DATABASE_URL (no serviço app)
+POSTGRES_USER=seu_usuario
+POSTGRES_PASSWORD=sua_senha
+POSTGRES_DB=iotdb
+POSTGRES_SERVER=db
+DATABASE_URL=postgresql://seu_usuario:sua_senha@db:5432/iotdb
+SECRET_KEY=sua_chave_secreta
 ```
 
 ## Como Rodar
